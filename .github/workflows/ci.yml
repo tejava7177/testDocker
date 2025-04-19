@@ -25,6 +25,6 @@ jobs:
 
       - name: 🐳 Docker 이미지 빌드
         run: |
-          docker build -t my-flask-app .
+          docker build -t my-flask-app ./python/docker-python-app
 
       # ❗추후에 여기에 DockerHub push, 테스트 등 추가 가능
