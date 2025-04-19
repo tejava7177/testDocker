@@ -1,4 +1,4 @@
-name: Docker CI for Flask App
+name: Docker CI/CD - Build & Push
 
 on:
   push:
@@ -6,25 +6,27 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ✅ 코드 체크아웃
+      - name: 📥 코드 체크아웃
         uses: actions/checkout@v3
 
-      - name: 🐍 Python 설정 (3.11)
+      - name: 🐍 Python 3.11 설정
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
       - name: 📦 의존성 설치
         run: |
-          python -m pip install --upgrade pip
           pip install -r python/docker-python-app/requirements.txt
 
-      - name: 🐳 Docker 이미지 빌드
-        run: |
-          docker build -t my-flask-app ./python/docker-python-app
+      - name: 🔐 DockerHub 로그인
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      # ❗추후에 여기에 DockerHub push, 테스트 등 추가 가능
+      - name: 🐳 Docker 이미지 빌드
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/my-flask-app:latest ./python/docker-python-app
+
+      - name: 🚀 DockerHub 푸시
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/my-flask-app:latest
