@@ -11,7 +11,7 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # 3. requirements.txt 복사 & 의존성 설치
-COPY ../../requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 4. 앱 코드 복사
